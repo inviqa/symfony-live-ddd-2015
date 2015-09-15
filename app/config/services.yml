@@ -22,5 +22,5 @@ services:
     symfony_live.pos.command_bus:
         class: SymfonyLive\Infrastructure\Bus\CommandBus
         arguments:
-           - [ @symfony_live.pos.handler.return_product ]
+           - [ @symfony_live.pos.handler.return_product, @symfony_live.pos.handler.refund_for_cash, @symfony_live.pos.handler.refund_for_credit ]
 
