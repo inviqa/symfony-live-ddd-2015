@@ -7,6 +7,20 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    symfony_live.pos.handler.return_product:
+        class: SymfonyLive\Pos\Returns\ReturnProductHandler
+        arguments: ["@symfony_live.pos.returns"]
+
+    symfony_live.pos.handler.refund_for_cash:
+        class: SymfonyLive\Pos\Returns\RefundForCashHandler
+        arguments: ["@symfony_live.pos.returns"]
+
+    symfony_live.pos.handler.refund_for_credit:
+        class: SymfonyLive\Pos\Returns\RefundForCreditHandler
+        arguments: ["@symfony_live.pos.returns"]
+
+    symfony_live.pos.command_bus:
+        class: SymfonyLive\Infrastructure\Bus\CommandBus
+        arguments:
+           - [ @symfony_live.pos.handler.return_product ]
+

@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use SymfonyLive\Pos\Returns\RefundForCash;
+use SymfonyLive\Pos\Returns\RefundForCredit;
 use SymfonyLive\Pos\Returns\ReturnNumber;
 
 class RefundReturnCommand extends ContainerAwareCommand
@@ -31,20 +33,16 @@ class RefundReturnCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $returns = $this->getContainer()->get('symfony_live.pos.returns');
+
         $returnNumber = new ReturnNumber($input->getArgument('return-number'));
 
-        if (!$return = $returns->find($returnNumber)) {
-            throw new \RuntimeException('Cannot find return ');
-        }
-
         if ($input->getOption('credit')) {
-            $return->refundForCredit();
+            $command = new RefundForCredit($returnNumber);
         } else {
-            $return->refundForCash();
+            $command = new RefundForCash($returnNumber);
         }
 
-        $returns->update($return);
+        $this->getContainer()->get('symfony_live.pos.command_bus')->dispatch($command);
 
         $output->writeln('Refunded');
     }

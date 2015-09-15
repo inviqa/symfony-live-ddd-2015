@@ -10,9 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use SymfonyLive\Pos\Purchase\Price;
 use SymfonyLive\Pos\Purchase\Purchase;
 use SymfonyLive\Pos\Purchase\Sku;
-use SymfonyLive\Pos\Returns\ProductReturn;
 use SymfonyLive\Pos\Returns\RefundTimeframe;
 use SymfonyLive\Pos\Returns\ReturnNumber;
+use SymfonyLive\Pos\Returns\ReturnProduct;
 
 class CreateReturnCommand extends ContainerAwareCommand
 {
@@ -35,19 +35,20 @@ class CreateReturnCommand extends ContainerAwareCommand
                 'days',
                 InputArgument::REQUIRED,
                 'Days since purchase'
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $return = new ProductReturn(
+        $command = new ReturnProduct(
             new ReturnNumber($returnNumber = Uuid::uuid4()),
             new Purchase(new Price($input->getArgument('price')), new Sku($input->getArgument('sku'))),
-            new RefundTimeframe(new \DateTimeImmutable('-' . $input->getArgument('days') . ' days'), new \DateTimeImmutable('now'))
+            new RefundTimeframe(new \DateTimeImmutable('-' . $input->getArgument(
+                    'days'
+                ) . ' days'), new \DateTimeImmutable('now'))
         );
 
-        $this->getContainer()->get('symfony_live.pos.returns')->add($return);
+        $this->getContainer()->get('symfony_live.pos.command_bus')->dispatch($command);
 
         $output->writeln('Processed with Return Number ' . $returnNumber->toString());
     }
