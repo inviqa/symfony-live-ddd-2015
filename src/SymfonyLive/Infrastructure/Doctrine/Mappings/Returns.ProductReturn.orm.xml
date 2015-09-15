@@ -1,0 +1,13 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="SymfonyLive\Pos\Returns\ProductReturn" table="returns">
+        <field name="refund" type="integer"/>
+        <embedded name="returnNumber" class="SymfonyLive\Pos\Returns\ReturnNumber" use-column-prefix="false"/>
+        <embedded name="purchase" class="SymfonyLive\Pos\Purchase\Purchase" column-prefix="purchase_"/>
+        <embedded name="timeframe" class="SymfonyLive\Pos\Returns\RefundTimeframe" use-column-prefix="false"/>
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,4 @@
+services:
+    symfony_live.pos.returns:
+        class: SymfonyLive\Infrastructure\Doctrine\Returns
+        arguments: [ @doctrine ]
