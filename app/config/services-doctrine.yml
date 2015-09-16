@@ -2,3 +2,7 @@ services:
     symfony_live.pos.returns:
         class: SymfonyLive\Infrastructure\Doctrine\Returns
         arguments: [ @doctrine ]
+
+    symfony_live.pos.read_model.outstanding_returns:
+        class: SymfonyLive\Infrastructure\Doctrine\OutstandingReturns
+        arguments: [ @doctrine ]

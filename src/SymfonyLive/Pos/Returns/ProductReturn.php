@@ -15,11 +15,15 @@ class ProductReturn
     private $purchase;
     private $returnNumber;
 
+    private $events = [];
+
     public function __construct(ReturnNumber $returnNumber, Purchase $purchase, RefundTimeframe $timeframe)
     {
         $this->returnNumber = $returnNumber;
         $this->timeframe = $timeframe;
         $this->purchase = $purchase;
+
+        $this->events[] = new ProductReturned($returnNumber, $purchase, $timeframe);
     }
 
     public function refundForCredit()
@@ -45,5 +49,10 @@ class ProductReturn
         if ($this->refund) {
             throw new ProductAlreadyRefunded();
         }
+    }
+
+    public function getEvents()
+    {
+        return $this->events;
     }
 } 

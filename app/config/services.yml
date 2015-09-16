@@ -9,18 +9,22 @@ parameters:
 services:
     symfony_live.pos.handler.return_product:
         class: SymfonyLive\Pos\Returns\ReturnProductHandler
-        arguments: ["@symfony_live.pos.returns"]
+        arguments:
+          - @symfony_live.pos.event_bus
+          - @symfony_live.pos.returns
 
-    symfony_live.pos.handler.refund_for_cash:
-        class: SymfonyLive\Pos\Returns\RefundForCashHandler
-        arguments: ["@symfony_live.pos.returns"]
-
-    symfony_live.pos.handler.refund_for_credit:
-        class: SymfonyLive\Pos\Returns\RefundForCreditHandler
-        arguments: ["@symfony_live.pos.returns"]
+    symfony_live.pos.event_bus:
+        class: SymfonyLive\Infrastructure\Bus\EventBus
+        arguments:
+          - [ @symfony_live.pos.read_model.outstanding_returns_listener ]
 
     symfony_live.pos.command_bus:
         class: SymfonyLive\Infrastructure\Bus\CommandBus
         arguments:
-           - [ @symfony_live.pos.handler.return_product, @symfony_live.pos.handler.refund_for_cash, @symfony_live.pos.handler.refund_for_credit ]
+          - [ @symfony_live.pos.handler.return_product ]
+
+    symfony_live.pos.read_model.outstanding_returns_listener:
+        class: SymfonyLive\Pos\ReadModel\Returns\OutstandingReturnListener
+        arguments:
+          - @symfony_live.pos.read_model.outstanding_returns
 

@@ -42,6 +42,6 @@ class ProductReturnController extends Controller
 
         $this->get('symfony_live.pos.command_bus')->dispatch($form->getData()->createCommand());
 
-        return new Response('Product return created with return number ' . $returnNumber);
+        return $this->redirect($this->generateUrl('outstanding'));
     }
 }

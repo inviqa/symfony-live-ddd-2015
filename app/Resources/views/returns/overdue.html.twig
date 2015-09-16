@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block title "Outstanding returns" %}
+
+{% block body %}
+
+<h1>Outstanding returns</h1>
+
+<p><a href="{{ path('return_product') }}">Return a product</a></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Return number</th>
+            <th>SKU</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for return in returns %}
+        <tr>
+            <td>{{ return.returnNumber }}</td>
+            <td>{{ return.sku }}</td>
+            <td>{{ return.price }}</td>
+        </tr>
+        {%  endfor %}
+    </tbody>
+</table>
+
+
+{% endblock body %}
+
