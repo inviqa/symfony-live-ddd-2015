@@ -2,15 +2,19 @@
 
 namespace SymfonyLive\Pos\Returns;
 
+use SymfonyLive\Infrastructure\Bus\EventBus;
+
 /**
  * CommandHandler
  */
 class RefundForCreditHandler
 {
+    private $eventBus;
     private $returns;
 
-    public function __construct(Returns $returns)
+    public function __construct(EventBus $eventBus, Returns $returns)
     {
+        $this->eventBus = $eventBus;
         $this->returns = $returns;
     }
 
@@ -28,5 +32,7 @@ class RefundForCreditHandler
         $return->refundForCredit();
 
         $this->returns->update($return);
+
+        $this->eventBus->dispatch($return->getEvents());
     }
 } 

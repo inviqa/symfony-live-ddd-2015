@@ -31,6 +31,8 @@ class ProductReturn
         $this->checkNotAlreadyRefunded();
 
         $this->refund = self::CREDIT_REFUND;
+
+        $this->events[] = new RefundedForCredit($this->returnNumber);
     }
 
     public function refundForCash()
@@ -42,6 +44,8 @@ class ProductReturn
         }
 
         $this->refund = self::CASH_REFUND;
+
+        $this->events[] = new RefundedForCash($this->returnNumber);
     }
 
     private function checkNotAlreadyRefunded()
