@@ -19,9 +19,19 @@
     <tbody>
         {% for return in returns %}
         <tr>
-            <td>{{ return.returnNumber }}</td>
+            <td title="{{ return.returnNumber }}">{{ return.returnNumber[:10] }}…</td>
             <td>{{ return.sku }}</td>
             <td>{{ return.price }}</td>
+            <td>
+                <form action="{{ path('refund_return') }}" method="post">
+                    <input type="hidden" value="{{ return.returnNumber }}" name="return_number" />
+                    <button name="return_type" value="credit">Refund for Credit</button>
+
+                    {% if return.refundableForCash %}
+                        <button name="return_type" value="cash">Refund for Cash</button>
+                    {% endif %}
+                </form>
+            </td>
         </tr>
         {%  endfor %}
     </tbody>

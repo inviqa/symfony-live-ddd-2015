@@ -32,8 +32,9 @@ class OutstandingReturnListener
     {
         $returnNumber = $event->returnNumber()->toString();
         $purchase = explode('@', $event->purchase()->toString());
+        $refundableForCash = $event->timeframe()->isWithinCashRefundPeriod();
 
-        $this->repository->add(new OutstandingReturn($returnNumber, $purchase[0], $purchase[1]));
+        $this->repository->add(new OutstandingReturn($returnNumber, $purchase[0], $purchase[1], $refundableForCash));
     }
 
     private function dispatchRefundedForCash(RefundedForCash $event)
