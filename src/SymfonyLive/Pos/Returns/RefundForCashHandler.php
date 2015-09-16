@@ -33,6 +33,6 @@ class RefundForCashHandler
 
         $this->returns->update($return);
 
-        $this->eventBus->dispatch($return->getEvents());
+        $this->eventBus->dispatch($return->getNewEvents());
     }
 } 

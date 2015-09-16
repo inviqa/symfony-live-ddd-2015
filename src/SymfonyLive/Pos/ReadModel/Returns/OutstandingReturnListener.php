@@ -19,11 +19,9 @@ class OutstandingReturnListener
     {
         if ($event instanceof ProductReturned) {
             $this->dispatchProductReturned($event);
-        }
-        elseif ($event instanceof RefundedForCash) {
+        } elseif ($event instanceof RefundedForCash) {
             $this->dispatchRefundedForCash($event);
-        }
-        elseif ($event instanceof RefundedForCredit) {
+        } elseif ($event instanceof RefundedForCredit) {
             $this->dispatchRefundedForCredit($event);
         }
     }

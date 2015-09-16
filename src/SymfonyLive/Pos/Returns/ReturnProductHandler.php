@@ -25,10 +25,14 @@ class ReturnProductHandler
 
     public function handle($command)
     {
-        $productReturn = new ProductReturn($command->returnNumber(), $command->purchase(), $command->timeframe());
+        $productReturn = ProductReturn::returnProduct(
+            $command->returnNumber(),
+            $command->purchase(),
+            $command->timeframe()
+        );
 
         $this->returns->add($productReturn);
 
-        $this->eventBus->dispatch($productReturn->getEvents());
+        $this->eventBus->dispatch($productReturn->getNewEvents());
     }
 } 

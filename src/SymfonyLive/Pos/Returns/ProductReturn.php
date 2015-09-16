@@ -14,25 +14,26 @@ class ProductReturn
     private $timeframe;
     private $purchase;
     private $returnNumber;
-
     private $events = [];
+    private $newEvents = [];
 
-    public function __construct(ReturnNumber $returnNumber, Purchase $purchase, RefundTimeframe $timeframe)
+    private function __construct()
     {
-        $this->returnNumber = $returnNumber;
-        $this->timeframe = $timeframe;
-        $this->purchase = $purchase;
+    }
 
-        $this->events[] = new ProductReturned($returnNumber, $purchase, $timeframe);
+    public static function returnProduct(ReturnNumber $returnNumber, Purchase $purchase, RefundTimeframe $timeframe)
+    {
+        $productReturn = new self;
+        $productReturn->raise(new ProductReturned($returnNumber, $purchase, $timeframe));
+
+        return $productReturn;
     }
 
     public function refundForCredit()
     {
         $this->checkNotAlreadyRefunded();
 
-        $this->refund = self::CREDIT_REFUND;
-
-        $this->events[] = new RefundedForCredit($this->returnNumber);
+        $this->raise(new RefundedForCredit($this->returnNumber));
     }
 
     public function refundForCash()
@@ -43,9 +44,7 @@ class ProductReturn
             throw new RefundTimeframeExpired();
         }
 
-        $this->refund = self::CASH_REFUND;
-
-        $this->events[] = new RefundedForCash($this->returnNumber);
+        $this->raise(new RefundedForCash($this->returnNumber));
     }
 
     private function checkNotAlreadyRefunded()
@@ -55,8 +54,57 @@ class ProductReturn
         }
     }
 
+    private function raise($event)
+    {
+        $this->events[] = $event;
+        $this->newEvents[] = $event;
+        $this->apply($event);
+    }
+
     public function getEvents()
     {
         return $this->events;
+    }
+
+    public function getNewEvents()
+    {
+        return $this->newEvents;
+    }
+
+    private function apply($event)
+    {
+        switch (get_class($event)) {
+            case ProductReturned::class:
+                $this->returnNumber = $event->returnNumber();
+                $this->timeframe = $event->timeFrame();
+                $this->purchase = $event->purchase();
+                break;
+            case RefundedForCredit::class:
+                $this->refund = self::CREDIT_REFUND;
+                break;
+            case RefundedForCash::class:
+                $this->refund = self::CASH_REFUND;
+                break;
+        }
+    }
+
+    public static function fromEvents(array $events)
+    {
+        $productReturn = new self;
+        array_walk(
+            $events,
+            function ($event) use ($productReturn) {
+                $productReturn->apply($event);
+            }
+        );
+
+        $productReturn->events = $events;
+
+        return $productReturn;
+    }
+
+    public function getAggregateId()
+    {
+        return $this->returnNumber->toString();
     }
 } 

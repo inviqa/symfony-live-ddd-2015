@@ -79,6 +79,12 @@ doctrine:
                dir:        "%kernel.root_dir%/../src/SymfonyLive/Infrastructure/Doctrine/Mappings"
                prefix:     SymfonyLive\Pos
                is_bundle:  false
+             es:
+               mapping:    true
+               type:       xml
+               dir:        "%kernel.root_dir%/../src/SymfonyLive/Infrastructure/Doctrine/EventSourcing/Mappings"
+               prefix:     SymfonyLive\Infrastructure\Doctrine
+               is_bundle:  false
 
 # Swiftmailer Configuration
 swiftmailer:
