@@ -54,6 +54,6 @@ class Returns implements \SymfonyLive\Pos\Returns\Returns
     {
         $numberOfExistingEvents = count($return->getEvents()) - count($return->getNewEvents());
 
-        return range($numberOfExistingEvents, count($return->getEvents()));
+        return array_filter(range($numberOfExistingEvents, count($return->getEvents())));
     }
 }
