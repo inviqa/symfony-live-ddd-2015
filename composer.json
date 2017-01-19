@@ -1,5 +1,5 @@
 {
-    "name": "cmcnulty/symfony_standard_edition",
+    "name": "inviqa/symfony-live-ddd-2015",
     "license": "proprietary",
     "type": "project",
     "autoload": {
